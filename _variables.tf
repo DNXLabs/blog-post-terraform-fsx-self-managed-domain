@@ -1,22 +1,53 @@
-locals {
 
-  ad_directory = {
-    name = "example.com"
-    ip1  = "XXX.XXX.XXX.XXX"
-    ip2  = "XXX.XXX.XXX.XXX"
-  }
 
-  env = {
-    default = {
-      name                = "fsxblogpost"
-      domain_ou_path      = "OU=Domain Controllers,DC=example,DC=com"
-      domain_fsx_username = "fsx"
-      domain_fsx_password = "placeholder"
-      fsx_deployment_type = "SINGLE_AZ_1"
-      fsx_subnet_ids      = ["subnet-XXXXXXXXXXXX"]
-      vpc_id              = "vpc-XXXXXXXXXXXX"
-    }
-  }
-
-  workspace = local.env[terraform.workspace]
+variable "ad_directory_name" {
+  type    = string
+  default = "example.com"
 }
+
+variable "ad_directory_ip1" {
+  type    = string
+  default = "XXX.XXX.XXX.XXX"
+}
+
+variable "ad_directory_ip2" {
+  type    = string
+  default = "XXX.XXX.XXX.XXX"
+}
+
+variable "fsx_name" {
+  type    = string
+  default = "fsxblogpost"
+}
+
+variable "domain_ou_path" {
+  type    = string
+  default = "OU=Domain Controllers,DC=example,DC=com"
+}
+
+variable "domain_fsx_username" {
+  type    = string
+  default = "fsx"
+}
+
+variable "domain_fsx_password" {
+  type    = string
+  default = "placeholder"
+}
+
+variable "fsx_deployment_type" {
+  type    = string
+  default = "SINGLE_AZ_1"
+}
+
+variable "fsx_subnet_ids" {
+  type    = list(string)
+  default = ["subnet-XXXXXXXXXXXX"]
+}
+
+variable "vpc_id" {
+  type    = string
+  default = "vpc-XXXXXXXXXXXX"
+}
+
+

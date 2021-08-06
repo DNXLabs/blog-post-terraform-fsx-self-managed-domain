@@ -28,28 +28,27 @@ resource "aws_kms_key" "fsx" {
 resource "aws_fsx_windows_file_system" "fsx" {
   kms_key_id          = aws_kms_key.fsx.arn
   storage_capacity    = 100
-  subnet_ids          = local.workspace.fsx_subnet_ids
+  subnet_ids          = var.fsx_subnet_ids
   throughput_capacity = 32
   security_group_ids  = [aws_security_group.fsx_sg.id]
-  deployment_type     = local.workspace.fsx_deployment_type
-  #preferred_subnet_id = local.workspace.fsx_subnet_ids
+  deployment_type     = var.fsx_deployment_type
 
   self_managed_active_directory {
-    dns_ips                                = split(",", aws_ssm_parameter.ipdns.value)
-    domain_name                            = aws_ssm_parameter.domain_name.value
-    password                               = aws_ssm_parameter.domain_fsx_password.value
-    username                               = aws_ssm_parameter.domain_fsx_username.value
-    organizational_unit_distinguished_name = aws_ssm_parameter.domain_ou_path.value
+    dns_ips                                = [var.ad_directory_ip1, var.ad_directory_ip2]
+    domain_name                            = var.ad_directory_name
+    username                               = var.domain_fsx_username
+    password                               = var.domain_fsx_password
+    organizational_unit_distinguished_name = var.domain_ou_path
   }
 }
 
 resource "aws_security_group" "fsx_sg" {
-  name        = "${local.workspace.name}-fsx" #var.name
+  name        = "${var.fsx_name}-fsx-sg"
   description = "SG for FSx"
   vpc_id      = data.aws_vpc.selected.id
 
   tags = {
-    Name = "-${local.workspace.name}-fsx"
+    Name = "${var.fsx_name}-fsx-sg"
   }
 }
 
